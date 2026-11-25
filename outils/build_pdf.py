@@ -22,9 +22,22 @@ CSS_IMPRESSION = """
 body { font-family: "Liberation Serif", serif; font-size: 10.5pt; margin: 0; }
 .page-couverture { page: couverture; }
 .page-couverture img { width: 148mm; height: 210mm; display: block; }
+/* Sur papier, pas de mode nuit : un léger fond aide à repérer les encadrés. */
+.encadre { background: #EEF4FB; padding-right: 0.6em; }
+.encadre.retenir, .encadre.attention, .encadre.resume, .encadre.exercice {
+  background: #FDF1E7;
+}
+.encadre.reponse { background: #F5F8FC; }
+th { background: #EEF4FB; }
 .liminaire { page: liminaire; }
+/* Chaque partie commence en haut d'une page de droite (recto). */
 .fichier { break-before: page; }
+.fichier.chapitre { break-before: right; }
+.fichier.chapitre h1 { margin-top: 12mm; font-size: 1.9em; }
 h1 { break-before: avoid; }
+h2.nouvelle-page { break-before: page; margin-top: 0; }
+h2, h3, .encadre > p:first-child { break-after: avoid; }
+p, li { orphans: 2; widows: 2; }
 .encadre, table, tr { break-inside: avoid; }
 nav a { text-decoration: none; color: inherit; }
 nav a::after { content: leader('.') target-counter(attr(href), page); }
@@ -56,6 +69,8 @@ def main():
                 r'href="([a-z0-9-]+)\.xhtml"', r'href="#fichier-\1"', corps
             )
             classe = "fichier"
+            if fichier.startswith(("introduction", "chapitre-", "annexes", "a-propos")):
+                classe += " chapitre"
             if fichier in ("titre.xhtml", "copyright.xhtml", "avertissement.xhtml"):
                 classe += " liminaire"
             nom = fichier[:-6]

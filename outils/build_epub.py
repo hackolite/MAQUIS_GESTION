@@ -18,7 +18,8 @@ SOUS_TITRE = (
     "Le guide terrain pour gagner vraiment sa vie avec son bar-resto "
     "en Afrique de l’Ouest"
 )
-AUTRICE = os.environ.get("AUTRICE", "[NOM DE L’AUTRICE]")
+AUTEURS = ["Florence Tchantague", "Loïc Lauréote"]
+AUTRICE = " et ".join(AUTEURS)
 EDITEUR = "[À COMPLÉTER]"
 ANNEE = "2026"
 DESCRIPTION = (
@@ -56,6 +57,9 @@ CLASSES_ENCADRES = [
 
 CSS = """@charset "UTF-8";
 
+/* Palette : orange (#D9661F) et bleu (#1F5FA8), assez soutenus pour
+   rester lisibles sur fond blanc comme en mode nuit. Aucun fond imposé. */
+
 body {
   margin: 0 0.5em;
   line-height: 1.5;
@@ -71,13 +75,22 @@ h1 {
   break-before: page;
   font-size: 1.6em;
   line-height: 1.25;
-  margin: 1em 0 1em 0;
+  margin: 0 0 1em 0;
+  padding-bottom: 0.3em;
+  border-bottom: 3px solid #D9661F;
+  color: #1F5FA8;
+}
+
+h2.nouvelle-page {
+  page-break-before: always;
+  break-before: page;
 }
 
 h2 {
   font-size: 1.3em;
   line-height: 1.3;
   margin: 1.6em 0 0.6em 0;
+  color: #D9661F;
   page-break-after: avoid;
   break-after: avoid;
 }
@@ -86,6 +99,7 @@ h3 {
   font-size: 1.1em;
   line-height: 1.3;
   margin: 1.3em 0 0.5em 0;
+  color: #1F5FA8;
   page-break-after: avoid;
   break-after: avoid;
 }
@@ -102,19 +116,40 @@ li {
 .encadre {
   margin: 1.2em 0;
   padding: 0.3em 0 0.3em 0.9em;
-  border-left: 4px solid;
+  border-left: 4px solid #1F5FA8;
 }
 
 .encadre > p:first-child {
   font-weight: bold;
+  color: #1F5FA8;
+}
+
+.encadre.outils {
+  border-left: 4px solid #1F5FA8;
+}
+
+.encadre.retenir,
+.encadre.attention,
+.encadre.resume {
+  border-left: 4px solid #D9661F;
+}
+
+.encadre.retenir > p:first-child,
+.encadre.attention > p:first-child,
+.encadre.resume > p:first-child {
+  color: #D9661F;
 }
 
 .encadre.exercice {
-  border-left: 4px solid;
+  border-left: 4px solid #D9661F;
+}
+
+.encadre.exercice > p:first-child {
+  color: #D9661F;
 }
 
 .encadre.reponse {
-  border-left: 4px dotted;
+  border-left: 4px dotted #1F5FA8;
   margin-left: 1.2em;
 }
 
@@ -131,7 +166,7 @@ table {
 }
 
 th, td {
-  border: 1px solid;
+  border: 1px solid #1F5FA8;
   padding: 0.3em;
   text-align: left;
   vertical-align: top;
@@ -141,6 +176,8 @@ th, td {
 
 th {
   font-weight: bold;
+  color: #1F5FA8;
+  border-bottom: 2px solid #D9661F;
 }
 
 img {
@@ -163,16 +200,22 @@ img {
   font-size: 1.8em;
   font-weight: bold;
   line-height: 1.25;
+  border-bottom: none;
 }
 
 .page-titre .sous-titre {
   font-size: 1.15em;
   font-style: italic;
   margin-top: 1em;
+  color: #D9661F;
 }
 
 .page-titre .autrice {
   font-size: 1.2em;
+  margin-top: 0.4em;
+}
+
+.page-titre .sous-titre + .autrice {
   margin-top: 3em;
 }
 
@@ -262,8 +305,14 @@ def convertir(md_texte: str, prefixe_id: str):
         niveau, contenu = m.group(1), m.group(2)
         compteur["n"] += 1
         ident = f"{prefixe_id}-t{compteur['n']}"
-        titres.append((int(niveau), ident, texte_brut(contenu)))
-        return f'<h{niveau} id="{ident}">{contenu}</h{niveau}>'
+        texte = texte_brut(contenu)
+        titres.append((int(niveau), ident, texte))
+        classe = ""
+        if niveau == "2" and (
+            texte.startswith("À toi de jouer") or texte.startswith("Annexe ")
+        ):
+            classe = ' class="nouvelle-page"'
+        return f'<h{niveau} id="{ident}"{classe}>{contenu}</h{niveau}>'
 
     corps = re.sub(r"<h([1-3])>(.*?)</h\1>", remplacer_titre, corps, flags=re.S)
     h1 = [t for t in titres if t[0] == 1]
@@ -274,14 +323,14 @@ def convertir(md_texte: str, prefixe_id: str):
 
 def creer_couverture(chemin: str) -> None:
     largeur, hauteur = 1600, 2560
-    image = Image.new("RGB", (largeur, hauteur), (122, 46, 26))
+    image = Image.new("RGB", (largeur, hauteur), (22, 58, 102))
     dessin = ImageDraw.Draw(image)
     dossier = "/usr/share/fonts/truetype/liberation/"
     gras = ImageFont.truetype(dossier + "LiberationSerif-Bold.ttf", 150)
     italique = ImageFont.truetype(dossier + "LiberationSerif-Italic.ttf", 70)
     normal = ImageFont.truetype(dossier + "LiberationSans-Regular.ttf", 80)
     creme = (250, 238, 214)
-    ocre = (232, 170, 66)
+    ocre = (240, 140, 40)
 
     def centrer(lignes, police, y, couleur, interligne):
         for ligne in lignes:
@@ -300,7 +349,7 @@ def creer_couverture(chemin: str) -> None:
         "bar-resto en Afrique de l’Ouest",
     ]
     centrer(lignes_st, italique, y + 180, creme, 100)
-    centrer([AUTRICE], normal, hauteur - 420, ocre, 100)
+    centrer(AUTEURS, normal, hauteur - 500, ocre, 110)
     image.save(chemin, "JPEG", quality=90)
 
 
@@ -343,8 +392,8 @@ def page_titre() -> str:
         '<section class="page-titre" epub:type="titlepage">\n'
         f'<h1 class="titre">{TITRE}</h1>\n'
         f'<p class="sous-titre">{SOUS_TITRE}</p>\n'
-        f'<p class="autrice">{AUTRICE}</p>\n'
-        "</section>"
+        + "".join(f'<p class="autrice">{a}</p>\n' for a in AUTEURS)
+        + "</section>"
     )
     return xhtml(TITRE, corps)
 
@@ -352,12 +401,13 @@ def page_titre() -> str:
 def page_a_propos() -> str:
     corps = (
         "<section>\n"
-        "<h1>À propos de l’autrice</h1>\n"
-        f"<p>{AUTRICE}</p>\n"
-        "<p>[À COMPLÉTER PAR L’AUTRICE]</p>\n"
-        "</section>"
+        "<h1>À propos des auteurs</h1>\n"
+        + "".join(
+            f"<p><strong>{a}</strong></p>\n<p>[À COMPLÉTER]</p>\n" for a in AUTEURS
+        )
+        + "</section>"
     )
-    return xhtml("À propos de l’autrice", corps)
+    return xhtml("À propos des auteurs", corps)
 
 
 def page_couverture() -> str:
@@ -464,7 +514,7 @@ def main():
 
     fichiers["a-propos.xhtml"] = page_a_propos()
     spine.append("a-propos.xhtml")
-    entrees.append(("a-propos.xhtml", "À propos de l’autrice", []))
+    entrees.append(("a-propos.xhtml", "À propos des auteurs", []))
 
     nav, ncx = construire_toc(entrees)
     fichiers["nav.xhtml"] = nav
@@ -502,9 +552,12 @@ def main():
         '<meta refines="#titre" property="title-type">main</meta>\n'
         f'<dc:title id="soustitre">{html.escape(SOUS_TITRE)}</dc:title>\n'
         '<meta refines="#soustitre" property="title-type">subtitle</meta>\n'
-        f'<dc:creator id="autrice">{html.escape(AUTRICE)}</dc:creator>\n'
-        '<meta refines="#autrice" property="role" scheme="marc:relators">aut</meta>\n'
-        "<dc:language>fr</dc:language>\n"
+        + "".join(
+            f'<dc:creator id="auteur{i}">{html.escape(a)}</dc:creator>\n'
+            f'<meta refines="#auteur{i}" property="role" scheme="marc:relators">aut</meta>\n'
+            for i, a in enumerate(AUTEURS, 1)
+        )
+        + "<dc:language>fr</dc:language>\n"
         f"<dc:publisher>{html.escape(EDITEUR)}</dc:publisher>\n"
         f"<dc:date>{ANNEE}</dc:date>\n"
         f"<dc:description>{html.escape(DESCRIPTION)}</dc:description>\n"

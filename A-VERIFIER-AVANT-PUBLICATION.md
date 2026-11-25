@@ -1,10 +1,10 @@
 # Points à vérifier avant la publication
 
 ## À compléter
-- [ ] **Nom de l’autrice** : remplacer `[NOM DE L’AUTRICE]`. Il suffit de relancer `AUTRICE="Prénom Nom" python3 outils/build_epub.py`. Le nom est alors mis à jour sur la couverture, la page de titre, le copyright et les métadonnées.
-- [ ] **À propos de l’autrice** : texte `[À COMPLÉTER PAR L’AUTRICE]` (dans `outils/build_epub.py`, fonction `page_a_propos`).
+- [x] **Noms des auteurs** : Florence Tchantague et Loïc Lauréote (liste `AUTEURS` dans `outils/build_epub.py`). Ils apparaissent sur la couverture, la page de titre, le copyright et dans les métadonnées.
+- [ ] **À propos des auteurs** : remplacer les deux `[À COMPLÉTER]` (fonction `page_a_propos` dans `outils/build_epub.py`). Vérifier aussi que « je » dans l’introduction et le mot « autrice » du cahier des charges conviennent à deux auteurs.
 - [ ] **Éditeur** : `[À COMPLÉTER]`, et ISBN (facultatif).
-- [ ] **Couverture** : la couverture actuelle est **provisoire** (typographique, 1600 × 2560, JPEG). Il faut la remplacer par une version professionnelle.
+- [ ] **Couverture** : la couverture actuelle est **provisoire** (typographique, bleu et orange, 1600 × 2560, JPEG). Il faut la remplacer par une version professionnelle.
 
 ## Passages [À VÉRIFIER] (17 mentions)
 - Introduction : 2 mentions. Elles expliquent seulement le principe de la mention, rien à vérifier.
@@ -32,4 +32,7 @@
 - Le livre compte **32 249 mots**, texte seul. Les chapitres 2 (2 457 mots) et 8 (2 407 mots) sont un peu sous la cible de 2 500. Les autres chapitres sont entre 2 560 et 2 998 mots.
 
 ## PDF
-- `gerer-et-rentabiliser-son-bar-resto.pdf` (A5, 194 pages) est généré depuis l’EPUB avec `python3 outils/build_pdf.py`. Il faut le relancer après chaque nouvel EPUB.
+- `gerer-et-rentabiliser-son-bar-resto.pdf` (A5, 209 pages) est généré depuis l’EPUB avec `python3 outils/build_pdf.py`. Il faut le relancer après chaque nouvel EPUB. Chaque partie (introduction, chapitres, annexes, à propos) commence en haut d’une page de droite. Des pages blanches sont donc ajoutées. « À toi de jouer » et chaque annexe commencent sur une nouvelle page.
+
+## Couleurs
+- Palette : titres et bordures en bleu (#1F5FA8) et orange (#D9661F). Dans l’EPUB, aucun fond n’est imposé et le mode nuit reste lisible. À tester sur une vraie liseuse en mode nuit. Dans le PDF, les encadrés ont un fond très clair.
