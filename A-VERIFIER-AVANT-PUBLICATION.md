@@ -27,3 +27,9 @@
 - [ ] Relire les 33 exercices de calcul et leurs réponses. Ils ont été recalculés automatiquement, avec 294 opérations contrôlées, mais une relecture humaine reste nécessaire.
 - [ ] Relire le ton et le vocabulaire local avec une gérante togolaise.
 - [ ] **Déclaration d’usage d’IA** sur la plateforme de vente (KDP, Google Play Livres, etc.).
+
+## Longueur
+- Le livre compte **32 249 mots**, texte seul. Les chapitres 2 (2 457 mots) et 8 (2 407 mots) sont un peu sous la cible de 2 500. Les autres chapitres sont entre 2 560 et 2 998 mots.
+
+## PDF
+- `gerer-et-rentabiliser-son-bar-resto.pdf` (A5, 194 pages) est généré depuis l’EPUB avec `python3 outils/build_pdf.py`. Il faut le relancer après chaque nouvel EPUB.
